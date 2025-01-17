@@ -124,7 +124,7 @@ async function analyzeCodeWithGroq(prompt: string, code: string, apiKey: string)
         {
             model: 'llama-3.3-70b-versatile',
             messages: [
-                { role: 'system', content: 'You are an assistant debugger AI.' },
+                { role: 'system', content: 'You are an assistant debugger AI. Just return me the line numbers of the code I send you as requested by my prompt preceded by the word line' },
                 { role: 'user', content: `${prompt}\n\nCode:\n${code}` },
             ],
         },
