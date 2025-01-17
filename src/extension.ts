@@ -1,14 +1,14 @@
 
 import * as vscode from 'vscode';
-import axios from 'axios'; // Calling API OpenAI
+import axios from 'axios'; // Calling API Groq
 
 export function activate(context: vscode.ExtensionContext) {
-    const addBreakpointsCommand = vscode.commands.registerCommand('openaiDebugger.addBreakpoints', async () => {
-        let apiKey = context.globalState.get<string>('openaiApiKey');
+    const addBreakpointsCommand = vscode.commands.registerCommand('groq.debugger', async () => {
+        let apiKey = context.globalState.get<string>('groqApiKey');
         
         if (!apiKey) {
             apiKey = await vscode.window.showInputBox({
-                prompt: 'Please enter your OpenAI API key',
+                prompt: 'Please enter your Groq API key',
                 password: true,
             });
 
@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return;
             }
 
-            await context.globalState.update('openaiApiKey', apiKey);
+            await context.globalState.update('groqApiKey', apiKey);
             vscode.window.showInformationMessage('API key has been saved.');
         }
 
@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('Running analysis code...');
 
         try {
-            const breakpoints = await analyzeCodeWithOpenAI(prompt, code, apiKey);
+            const breakpoints = await analyzeCodeWithGroq(prompt, code, apiKey);
             addBreakpointsToDebugger(editor, breakpoints);
         } catch (error) {
             if (error instanceof Error) {
@@ -77,9 +77,9 @@ export function activate(context: vscode.ExtensionContext) {
 async function verifyApiKey(apiKey: string): Promise<{ valid: boolean; error?: string }> {
     try {
         const response = await axios.post(
-            'https://api.openai.com/v1/chat/completions',
+            'https://api.groq.com/openai/v1/chat/completions',
             {
-                model: 'gpt-4o-mini',
+                model: 'llama-3.3-70b-versatile',
             },
             {
                 headers: {
@@ -113,11 +113,11 @@ async function verifyApiKey(apiKey: string): Promise<{ valid: boolean; error?: s
     }
 }
 
-async function analyzeCodeWithOpenAI(prompt: string, code: string, apiKey: string): Promise<number[]> {
+async function analyzeCodeWithGroq(prompt: string, code: string, apiKey: string): Promise<number[]> {
     const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
+        'https://api.groq.com/openai/v1/chat/completions',
         {
-            model: 'gpt-4o-mini',
+            model: 'llama-3.3-70b-versatile',
             messages: [
                 { role: 'system', content: 'You are an assistant debugger AI.' },
                 { role: 'user', content: `${prompt}\n\nCode:\n${code}` },
