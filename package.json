@@ -1,7 +1,7 @@
 {
   "name": "groq-debugger",
   "displayName": "Groq Debugger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A VSCode extension for debugging with Groq",
   "publisher": "flashboss",
   "icon": "vige.png",
