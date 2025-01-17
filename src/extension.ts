@@ -80,6 +80,12 @@ async function verifyApiKey(apiKey: string): Promise<{ valid: boolean; error?: s
             'https://api.groq.com/openai/v1/chat/completions',
             {
                 model: 'llama-3.3-70b-versatile',
+                messages: [
+                    {
+                        "role": "user",
+                        "content": "Verify my account"
+                    }
+                ]
             },
             {
                 headers: {
@@ -89,7 +95,6 @@ async function verifyApiKey(apiKey: string): Promise<{ valid: boolean; error?: s
             }
         );
 
-        // Se la risposta ha successo, ritorna che l'API key è valida
         return { valid: true };
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
